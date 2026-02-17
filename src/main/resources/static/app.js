@@ -426,56 +426,5 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
                     $scope.$on('$destroy', function() { viz.destroy(); });
                 }
             })
-            .state('d3viz', {
-                url: '/d3',
-                templateUrl: 'views/d3viz.html?v=1',
-                controller: function($scope, $http, keystrokeViz) {
-                    var viz = keystrokeViz.create();
-
-                    $scope.sendData = function() {
-                        var behavioData = bw.getBehavioData(false);
-                        console.log('D3 viz: raw behaviodata length =', behavioData ? behavioData.length : 0);
-                        var parsed = keystrokeViz.parseRawData(behavioData);
-                        console.log('D3 viz: parsed fields =', parsed.length, parsed.map(function(f) { return f.targetText; }));
-                        if (parsed.length > 0) {
-                            viz.addSession(parsed);
-                            viz.render();
-                        } else {
-                            console.warn('D3 viz: no keystroke fields found — type in the fields before submitting');
-                        }
-                        bw.getBehavioData(true);
-                        $scope.username = '';
-                        $scope.password = '';
-                        $scope.outputData = '';
-                        document.getElementById('outputArea').style.display = 'none';
-                        $http.post('/api/GetReport', {
-                            'username':    $scope.username,
-                            'password':    $scope.password,
-                            'behaviodata': behavioData
-                        }).then(null, function(e) {
-                            console.warn('Backend relay failed:', e.status);
-                        });
-                    };
-
-                    $scope.startMonitor = function() {
-                        $scope.outputData = bw.getBehavioData(false);
-                        document.getElementById('outputArea').style.display = 'block';
-                    };
-
-                    $scope.stopMonitor = function() {
-                        document.getElementById('outputArea').style.display = 'none';
-                    };
-
-                    $scope.resetData = function() {
-                        viz.reset();
-                        bw.getBehavioData(true);
-                        $scope.username  = '';
-                        $scope.password  = '';
-                        $scope.outputData = '';
-                        document.getElementById('outputArea').style.display = 'none';
-                    };
-
-                    $scope.$on('$destroy', function() { viz.destroy(); });
-                }
-            });
+;
     });
