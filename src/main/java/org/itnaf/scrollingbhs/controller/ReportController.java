@@ -28,7 +28,7 @@ public class ReportController {
     }
 
     @PostMapping("/GetReport")
-    public ResponseEntity<String> getReport(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<Object> getReport(@RequestBody Map<String, Object> payload) {
         String behaviodataString = (String) payload.get("behaviodata");
         if (behaviodataString == null) {
             return ResponseEntity.badRequest().body("Missing 'behaviodata' field.");
@@ -64,6 +64,6 @@ public class ReportController {
             keystrokeDataService.setKeystrokeSession(sessionData);
         }
 
-        return ResponseEntity.ok("Report received. Keystroke data fields processed: " + sessionData.size());
+        return ResponseEntity.ok(java.util.Map.of("status", "ok", "fieldsProcessed", sessionData.size()));
     }
 }
