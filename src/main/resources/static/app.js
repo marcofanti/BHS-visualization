@@ -469,29 +469,32 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
                     $scope.sendData = function() {
                         var behavioData = bw.getBehavioData(false);
 
-                        $http.post('/api/GetReport', {
-                            'username':   $scope.username,
-                            'password':   $scope.password,
-                            'behaviodata': behavioData
-                        }).then(function() {
-                            var parsed = parseRawData(behavioData);
-                            if (parsed.length === 0) return;
-
+                        // Parse and render immediately — D3 viz is client-side only
+                        var parsed = parseRawData(behavioData);
+                        if (parsed.length > 0) {
                             sessions.push({ data: parsed });
                             if (sessions.length > 2) sessions.shift();
-
-                            bw.getBehavioData(true);
-                            $scope.username = '';
-                            $scope.password = '';
-                            jQuery('#username').val('');
-                            jQuery('#password').val('');
-                            $scope.outputData = '';
-                            document.getElementById('outputArea').style.display = 'none';
-
                             render();
+                        } else {
+                            console.warn('D3 viz: no keystroke fields found — type in the fields before submitting');
+                        }
 
-                        }, function(e) {
-                            console.error('Error sending data', e);
+                        // Reset captured data and form fields
+                        bw.getBehavioData(true);
+                        $scope.username = '';
+                        $scope.password = '';
+                        jQuery('#username').val('');
+                        jQuery('#password').val('');
+                        $scope.outputData = '';
+                        document.getElementById('outputArea').style.display = 'none';
+
+                        // Also relay to backend so the JavaFX window updates (best-effort)
+                        $http.post('/api/GetReport', {
+                            'username':    $scope.username,
+                            'password':    $scope.password,
+                            'behaviodata': behavioData
+                        }).then(null, function(e) {
+                            console.warn('Backend relay failed (JavaFX window will not update):', e.status);
                         });
                     };
 
