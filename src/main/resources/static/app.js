@@ -260,7 +260,12 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
                         cancelAnimationFrame(animationId);
                         animationId = null;
                     }
-                    document.getElementById('viz-container').style.display = 'block';
+                    var container = document.getElementById('viz-container');
+                    if (!container) {
+                        console.error('keystrokeViz: #viz-container not found — template may be stale, try a hard refresh (Cmd+Shift+R)');
+                        return;
+                    }
+                    container.style.display = 'block';
                     var svg  = d3.select('#timeline-svg');
                     svg.selectAll('*').remove();
                     var w    = vizWidth();
@@ -312,11 +317,11 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
         $stateProvider
             .state('index', {
                 url: '',
-                templateUrl: 'views/index.html'
+                templateUrl: 'views/index.html?v=1'
             })
             .state('login', {
                 url: '/login',
-                templateUrl: 'views/login.html',
+                templateUrl: 'views/login.html?v=1',
                 controller: function($scope, $http, keystrokeViz) {
                     var viz = keystrokeViz.create();
 
@@ -368,7 +373,7 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
             })
             .state('signup', {
                 url: '/signup',
-                templateUrl: 'views/signup.html',
+                templateUrl: 'views/signup.html?v=1',
                 controller: function($scope, $http, keystrokeViz) {
                     var viz = keystrokeViz.create();
 
@@ -423,7 +428,7 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
             })
             .state('d3viz', {
                 url: '/d3',
-                templateUrl: 'views/d3viz.html',
+                templateUrl: 'views/d3viz.html?v=1',
                 controller: function($scope, $http, keystrokeViz) {
                     var viz = keystrokeViz.create();
 
