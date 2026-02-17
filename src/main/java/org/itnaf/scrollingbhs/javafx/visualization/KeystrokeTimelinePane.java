@@ -72,9 +72,19 @@ public class KeystrokeTimelinePane extends Pane {
         // --- FIX: Define scaleX here, so it's in scope for the AnimationTimer ---
         final double scaleX = (getWidth() - FxApplication.LABEL_WIDTH - 20) / timelineDurationMillis;
 
+        // --- Pre-compute per-field start time (first keydown timestamp) ---
+        Map<String, Long> fieldStartTimes = new HashMap<>();
+        for (KeystrokeTimingData fieldData : sessionData) {
+            fieldData.getEvents().stream()
+                    .filter(e -> e.getAction() == 0)
+                    .min(Comparator.comparingLong(KeystrokeEvent::getTimestamp))
+                    .ifPresent(e -> fieldStartTimes.put(fieldData.getTargetText(), e.getTimestamp()));
+        }
+
         // --- 3. Schedule all events in the master timeline ---
         for (KeystrokeTimingData fieldData : sessionData) {
             double fieldBaseY = fieldYPositions.get(fieldData.getTargetText());
+            long fieldStartTime = fieldStartTimes.getOrDefault(fieldData.getTargetText(), sessionStartTime);
 
             for (KeystrokeEvent event : fieldData.getEvents()) {
                 long eventTimeFromStart = event.getTimestamp() - sessionStartTime;
@@ -85,7 +95,7 @@ public class KeystrokeTimelinePane extends Pane {
                                 .filter(b -> b.fieldBaseY == fieldBaseY).count();
                         double verticalOffset = overlapLevel * 15.0;
 
-                        double rectX = FxApplication.LABEL_WIDTH + ((event.getTimestamp() % timelineDurationMillis) * scaleX);
+                        double rectX = FxApplication.LABEL_WIDTH + ((event.getTimestamp() - fieldStartTime) * scaleX);
                         
                         Rectangle rect = new Rectangle(rectX, fieldBaseY - verticalOffset, 0, 20);
                         rect.setFill(getColorForKey(event.getKeyCode()));

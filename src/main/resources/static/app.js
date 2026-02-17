@@ -28,9 +28,11 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
                             // 1. Reset the behavio data collector for the next session.
                             bw.getBehavioData(true);
 
-                            // 2. Clear the model values, which will clear the input fields in the UI.
+                            // 2. Clear the model values and the DOM values explicitly.
                             $scope.username = '';
                             $scope.password = '';
+                            jQuery('#username').val('');
+                            jQuery('#password').val('');
 
                             // 3. Clear and hide the raw data text area.
                             $scope.outputData = '';
@@ -46,7 +48,7 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
 
                     // Function to display the collected data
                     $scope.startMonitor = function() {
-                        $scope.outputData = JSON.stringify(JSON.parse(bw.getBehavioData(false)), null, 2);
+                        $scope.outputData = bw.getBehavioData(false);
                         document.getElementById('outputArea').style.display = 'block';
                     };
 
