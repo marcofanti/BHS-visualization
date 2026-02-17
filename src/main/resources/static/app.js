@@ -28,11 +28,9 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
                             // 1. Reset the behavio data collector for the next session.
                             bw.getBehavioData(true);
 
-                            // 2. Clear the model values and the DOM values explicitly.
+                            // 2. Clear the model values (ng-model handles DOM automatically).
                             $scope.username = '';
                             $scope.password = '';
-                            jQuery('#username').val('');
-                            jQuery('#password').val('');
 
                             // 3. Clear and hide the raw data text area.
                             $scope.outputData = '';
@@ -91,9 +89,6 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
                             $scope.name = '';
                             $scope.email = '';
                             $scope.phone = '';
-                            jQuery('#name').val('');
-                            jQuery('#email').val('');
-                            jQuery('#phone').val('');
 
                             $scope.outputData = '';
                             if (document.getElementById('outputArea')) {
@@ -470,7 +465,9 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
                         var behavioData = bw.getBehavioData(false);
 
                         // Parse and render immediately — D3 viz is client-side only
+                        console.log('D3 viz: raw behaviodata length =', behavioData ? behavioData.length : 0);
                         var parsed = parseRawData(behavioData);
+                        console.log('D3 viz: parsed fields =', parsed.length, parsed.map(function(f) { return f.targetText; }));
                         if (parsed.length > 0) {
                             sessions.push({ data: parsed });
                             if (sessions.length > 2) sessions.shift();
@@ -479,12 +476,10 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
                             console.warn('D3 viz: no keystroke fields found — type in the fields before submitting');
                         }
 
-                        // Reset captured data and form fields
+                        // Reset captured data and form fields (ng-model handles DOM automatically)
                         bw.getBehavioData(true);
                         $scope.username = '';
                         $scope.password = '';
-                        jQuery('#username').val('');
-                        jQuery('#password').val('');
                         $scope.outputData = '';
                         document.getElementById('outputArea').style.display = 'none';
 
