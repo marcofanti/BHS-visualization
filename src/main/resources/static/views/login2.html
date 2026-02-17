@@ -1,0 +1,89 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-4 col-xs-1">
+		</div>
+		<div class="col-md-4 col-xs-10">
+			<div class="form-group">
+				<label>Package Data</label>
+				<div class="well well-sm">
+
+					<div class="input-group">
+						<input class="form-control" type="text" placeholder="journeyid" id="journeyid" ng-model="journeyId">
+						<span class="input-group-btn">
+              <button class="btn btn-default" ng-click="generateJID()" type="button" id="generateJID"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
+            </span>
+					</div>
+					<div class="input-group">
+						<input class="form-control" type="text" placeholder="sessionid" id="sessionid" ng-model="sessionId">
+						<span class="input-group-btn">
+              <button class="btn btn-default" ng-click="generateSID()" type="button" id="generateSID"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
+            </span>
+					</div>
+					<div class="input-group">
+						<input class="form-control" type="text" placeholder="userid" id="userid" ng-model="userId">
+						<span class="input-group-btn">
+            <button class="btn btn-default" ng-click="generateuID()" type="button" id="generateuID"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
+          </span>
+					</div>
+					<div class="input-group">
+						<input class="form-control" type="text" placeholder="notes" id="notes" ng-model="notes">
+						<span class="input-group-btn">
+            <button class="btn btn-default" ng-click="clearNotes()" type="button" id="clearNotes"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></button>
+            </span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Add Element</label>
+				<div class="well well-sm">
+					<p class="bg-danger" style="padding: 8px;" ng-show="errorMessage">
+						{{ errorMessage }}
+					</p>
+					<label>Element ID</label>
+					<input class="form-control" type="text" id="elementName" ng-model="elementName">
+					<label>Monitor Type</label>
+					<select ng-model="elementMonitorType"  class="form-control">
+						<option value="f">Normal</option>
+						<option value="fa">Anonymous</option>
+					</select>
+					<input class="btn btn-default" ng-click="addElement()" type="button" id="addElement" value="Add Element">
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Monitored Fields</label>
+				<div class="well well-sm" id="monitoredFields">
+					<label for="username" id="label_username">username</label>
+					<div class="input-group" id="input-group_username">
+						<input type="text" class="form-control" id="username" name="username" ng-model="username" monitored>
+						<span class="input-group-btn">
+                <button class="btn btn-default" ng-click="removeElement('username')" type="button" id="clearUsername"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></button>
+              </span>
+					</div>
+					<label for="password" id="label_password">password</label>
+					<div class="input-group" id="input-group_password">
+						<input type="password" class="form-control" id="password" name="password" ng-model="password" monitored>
+						<span class="input-group-btn">
+                <button class="btn btn-default" ng-click="removeElement('password')" type="button" id="clearUsername"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></button>
+              </span>
+					</div>
+				</div>
+			</div>
+			<div id="alerts"></div>
+			<div class="form-group">
+				<input class="btn btn-default" ng-click="sendData()" type="button" id="sendbutton" value="Send">
+				<input class="btn btn-default" ng-click="resetData()" type="button" id="resetbutton" value="Reset Data">
+				<input class="btn btn-default" ng-click="finalizeSession()" type="button" id="finalizebutton" value="Finalize Session" disabled="disabled">
+			</div>
+			<div class="form-group">
+				<p>Display/Hide collected data:</p>
+				<input class="btn btn-info" ng-click="startMonitor()" type="button" id="startbutton" value="Display Monitor">
+				<input class="btn btn-default" ng-click="stopMonitor()" type="button" id="stopbutton" value="Hide Monitor">
+			</div>
+			<div class="form-group" id="outputArea" style="display:none">
+				<textarea class="form-control" rows="20">{{outputData}}</textarea>
+			</div>
+		</div>
+		<div class="col-md-4 col-xs-1">
+		</div>
+	</div>
+</div>
