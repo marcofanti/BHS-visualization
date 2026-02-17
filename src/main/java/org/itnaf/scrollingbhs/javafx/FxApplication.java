@@ -2,7 +2,6 @@ package org.itnaf.scrollingbhs.javafx;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -59,25 +58,27 @@ public class FxApplication extends Application {
     private Pane createAxisPane() {
         Pane axisPane = new Pane();
         axisPane.setPrefHeight(30);
-        axisPane.setPadding(new Insets(5, 10, 5, LABEL_WIDTH + 10)); // Align with timeline pane's label width
+        axisPane.setStyle("-fx-background-color: #2B2B2B;");
+
+        double availableWidth = 1200 - LABEL_WIDTH - 20;
 
         Line axisLine = new Line();
         axisLine.setStroke(Color.WHITE);
-        axisLine.setStartX(0);
-        axisLine.setEndX(1200 - LABEL_WIDTH - 20); // Match timeline width
+        axisLine.setStartX(LABEL_WIDTH);
+        axisLine.setEndX(LABEL_WIDTH + availableWidth);
         axisLine.setLayoutY(10);
 
         axisPane.getChildren().add(axisLine);
 
-        // Add ticks and labels
+        // Add ticks and labels, offset by LABEL_WIDTH to align with the visualization area
         for (int i = 0; i <= timelineDurationSeconds; i++) {
-            double x = i * ((1200 - LABEL_WIDTH - 20) / timelineDurationSeconds);
+            double x = LABEL_WIDTH + i * (availableWidth / timelineDurationSeconds);
             Line tick = new Line(x, 5, x, 15);
             tick.setStroke(Color.WHITE);
             axisPane.getChildren().add(tick);
 
             if (i % 5 == 0) { // Label every 5 seconds
-                Text label = new Text(String.valueOf(i) + "s");
+                Text label = new Text(i + "s");
                 label.setFill(Color.WHITE);
                 label.setLayoutX(x - (label.getLayoutBounds().getWidth() / 2));
                 label.setLayoutY(25);

@@ -132,6 +132,13 @@ public class KeystrokeTimelinePane extends Pane {
             }
         };
 
+        // Stop all still-growing blocks when the timeline ends (handles orphaned keydowns, e.g. TAB)
+        sessionScheduler.setOnFinished(e -> {
+            activeBlocks.values().forEach(block -> block.isGrowing = false);
+            activeBlocks.clear();
+            blockGrower.stop();
+        });
+
         sessionScheduler.play();
         blockGrower.start();
     }
