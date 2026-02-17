@@ -69,5 +69,63 @@ angular.module('sampleApp', ['ui.router', 'behavio'])
                         console.log('Behavio data and form fields have been reset.');
                     };
                 }
+            })
+            .state('signup', {
+                url: '/signup',
+                templateUrl: 'views/signup.html',
+                controller: function($scope, $http) {
+                    // Function to send data to the backend, using email as the user identifier
+                    $scope.sendData = function() {
+                        var behavioData = bw.getBehavioData(false);
+
+                        $http.post('/api/GetReport', {
+                            'name': $scope.name,
+                            'email': $scope.email,
+                            'phone': $scope.phone,
+                            'behaviodata': behavioData
+                        }).then(function(response) {
+                            console.log('Data sent successfully', response.data);
+
+                            bw.getBehavioData(true);
+
+                            $scope.name = '';
+                            $scope.email = '';
+                            $scope.phone = '';
+                            jQuery('#name').val('');
+                            jQuery('#email').val('');
+                            jQuery('#phone').val('');
+
+                            $scope.outputData = '';
+                            if (document.getElementById('outputArea')) {
+                                document.getElementById('outputArea').style.display = 'none';
+                            }
+                            console.log('Form fields and behavio data have been reset.');
+
+                        }, function(e) {
+                            console.error('Error sending data', e);
+                        });
+                    };
+
+                    $scope.startMonitor = function() {
+                        $scope.outputData = bw.getBehavioData(false);
+                        document.getElementById('outputArea').style.display = 'block';
+                    };
+
+                    $scope.stopMonitor = function() {
+                        document.getElementById('outputArea').style.display = 'none';
+                    };
+
+                    $scope.resetData = function() {
+                        bw.getBehavioData(true);
+                        $scope.outputData = '';
+                        $scope.name = '';
+                        $scope.email = '';
+                        $scope.phone = '';
+                        if (document.getElementById('outputArea')) {
+                            document.getElementById('outputArea').style.display = 'none';
+                        }
+                        console.log('Behavio data and form fields have been reset.');
+                    };
+                }
             });
     });

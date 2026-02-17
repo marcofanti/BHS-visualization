@@ -22,6 +22,7 @@ public class FxApplication extends Application {
     private ConfigurableApplicationContext applicationContext;
     private long timelineDurationSeconds;
     public static final double LABEL_WIDTH = 150.0;
+    public static final double AXIS_HEIGHT = 30.0;
 
     public static void main(String[] args) {
         launch(args);
@@ -42,6 +43,7 @@ public class FxApplication extends Application {
 
         KeystrokeTimelinePane timelinePane = new KeystrokeTimelinePane(timelineDurationSeconds);
         timelinePane.setKeystrokeData(keystrokeDataService.sessionDataProperty());
+        timelinePane.setStage(primaryStage);
 
         BorderPane root = new BorderPane();
         root.setCenter(timelinePane);
@@ -49,7 +51,7 @@ public class FxApplication extends Application {
         Pane axisPane = createAxisPane();
         root.setBottom(axisPane);
 
-        Scene scene = new Scene(root, 1200, 400);
+        Scene scene = new Scene(root, 1200, 260);
 
         primaryStage.setScene(scene);
         primaryStage.show();
